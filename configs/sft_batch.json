@@ -1,0 +1,6 @@
+{
+  "configs": [
+    "configs/sft.json",
+    "configs/sft_r16.json"
+  ]
+}

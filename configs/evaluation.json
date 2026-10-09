@@ -1,0 +1,19 @@
+{
+  "model_id": "Qwen/Qwen3-0.6B",
+  "experiments_root": "/content/drive/MyDrive/llm-reasoning/experiments",
+  "datasets_root": "/content/drive/MyDrive/llm-reasoning/datasets",
+  "evaluations_root": "/content/drive/MyDrive/llm-reasoning/evaluations",
+  "upstream_dir": "external/ThinkingCap-Test",
+  "experiment_names": [],
+  "dev": {
+    "validation_examples": 100,
+    "max_new_tokens": 1024
+  },
+  "benchmark": {
+    "mode": "smoke",
+    "benchmarks": ["svamp"],
+    "samples": 1,
+    "attention_backend": "TRITON_ATTN",
+    "dtype": "half"
+  }
+}

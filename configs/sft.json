@@ -1,0 +1,40 @@
+{
+  "experiment_name": "gsm8k-sft-r8",
+  "model_id": "Qwen/Qwen3-0.6B",
+  "data": {
+    "root_dir": "/content/drive/MyDrive/llm-reasoning/datasets",
+    "source": "gsm8k-original",
+    "train_examples": 1000,
+    "validation_examples": 100,
+    "max_seq_length": 768
+  },
+  "lora": {
+    "rank": 8,
+    "alpha": 16,
+    "dropout": 0.05,
+    "target_modules": ["q_proj", "v_proj"]
+  },
+  "training": {
+    "seed": 42,
+    "epochs": 1,
+    "max_steps": -1,
+    "batch_size": 1,
+    "eval_batch_size": 1,
+    "gradient_accumulation_steps": 4,
+    "learning_rate": 0.0002,
+    "warmup_ratio": 0.05,
+    "lr_scheduler_type": "cosine",
+    "optimizer": "adamw_torch",
+    "weight_decay": 0.0,
+    "max_grad_norm": 1.0,
+    "gradient_checkpointing": true,
+    "logging_steps": 10,
+    "eval_steps": 50,
+    "save_steps": 50,
+    "save_total_limit": 2,
+    "sanity_generations": 2
+  },
+  "output": {
+    "root_dir": "/content/drive/MyDrive/llm-reasoning/experiments"
+  }
+}

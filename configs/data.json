@@ -1,0 +1,10 @@
+{
+  "format_version": 1,
+  "source": "BottleCapAI/ThinkingCap-Test",
+  "sft_source": "gsm8k",
+  "suggested_sft_train_examples": 3000,
+  "suggested_sft_validation_examples": 200,
+  "seed": 42,
+  "reasoning_style": "original_only",
+  "notes": "Dataset generation preserves BottleCapAI's existing train/val split. Example counts are applied later by trainer, not while exporting."
+}

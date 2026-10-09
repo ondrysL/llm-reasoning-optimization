@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+*.egg-info/
+
+# Downloaded upstream project, large datasets and model artifacts
+external/
+artifacts/
+outputs/
+checkpoints/
+*.safetensors
+
+# Notebook transient files
+.ipynb_checkpoints/
+
+# Environment
+.env

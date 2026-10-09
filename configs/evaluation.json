@@ -6,7 +6,7 @@
   "upstream_dir": "external/ThinkingCap-Test",
   "experiment_names": [],
   "dev": {
-    "validation_examples": 100,
+    "validation_examples": 20,
     "max_new_tokens": 1024
   },
   "benchmark": {

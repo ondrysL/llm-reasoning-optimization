@@ -1,0 +1,43 @@
+{
+  "experiment_name": "gsm8k-sft-7k-r16-lr1e-04",
+  "model_id": "Qwen/Qwen3-0.6B",
+  "data": {
+    "root_dir": "/auto/brno2/brno2/ondrys/llm-reasoning/datasets",
+    "source": "gsm8k-original",
+    "train_examples": 7000,
+    "validation_examples": 200,
+    "max_seq_length": 768
+  },
+  "lora": {
+    "rank": 16,
+    "alpha": 32,
+    "dropout": 0.05,
+    "target_modules": [
+      "q_proj",
+      "v_proj"
+    ]
+  },
+  "training": {
+    "seed": 42,
+    "epochs": 1,
+    "max_steps": -1,
+    "batch_size": 1,
+    "eval_batch_size": 1,
+    "gradient_accumulation_steps": 4,
+    "learning_rate": 0.0001,
+    "warmup_ratio": 0.05,
+    "lr_scheduler_type": "cosine",
+    "optimizer": "adamw_torch",
+    "weight_decay": 0.0,
+    "max_grad_norm": 1.0,
+    "gradient_checkpointing": true,
+    "logging_steps": 25,
+    "eval_steps": 250,
+    "save_steps": 250,
+    "save_total_limit": 2,
+    "sanity_generations": 2
+  },
+  "output": {
+    "root_dir": "/auto/brno2/brno2/ondrys/llm-reasoning/experiments"
+  }
+}

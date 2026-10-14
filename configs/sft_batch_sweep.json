@@ -1,0 +1,12 @@
+{
+  "configs": [
+    "configs/gsm8k-sft-1k-r8-lr2e-04.json",
+    "configs/gsm8k-sft-3k-r8-lr2e-04.json",
+    "configs/gsm8k-sft-7k-r8-lr2e-04.json",
+    "configs/gsm8k-sft-7k-r16-lr2e-04.json",
+    "configs/gsm8k-sft-7k-r32-lr2e-04.json",
+    "configs/gsm8k-sft-7k-r8-lr1e-04.json",
+    "configs/gsm8k-sft-7k-r16-lr1e-04.json",
+    "configs/gsm8k-sft-7k-r32-lr1e-04.json"
+  ]
+}

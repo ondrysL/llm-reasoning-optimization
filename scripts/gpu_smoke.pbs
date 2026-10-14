@@ -1,0 +1,45 @@
+
+#!/bin/bash -l
+#PBS -N qwen_gpu_test
+#PBS -l select=1:ncpus=4:mem=16gb:ngpus=1:gpu_mem=16gb:scratch_local=20gb
+#PBS -l walltime=01:00:00
+#PBS -j oe
+
+set -euo pipefail
+
+BASE="/auto/brno2/brno2/ondrys/llm-reasoning"
+cd "$BASE/repo"
+
+mkdir -p "$BASE/experiments/pbs"
+exec > "$BASE/experiments/pbs/${PBS_JOBID}.log" 2>&1
+
+module add mambaforge
+eval "$(conda shell.bash hook)"
+conda activate "$BASE/envs/qwen"
+
+export HF_HOME="$BASE/hf-cache"
+mkdir -p "$HF_HOME" "$SCRATCHDIR/tmp"
+export TMPDIR="$SCRATCHDIR/tmp"
+
+python -u - <<'PY'
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+assert torch.cuda.is_available(), "CUDA unavailable"
+print("GPU:", torch.cuda.get_device_name(0), flush=True)
+
+tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen3-0.6B")
+model = AutoModelForCausalLM.from_pretrained(
+    "Qwen/Qwen3-0.6B",
+    torch_dtype=torch.float16
+).to("cuda")
+
+inputs = tokenizer("What is 2 + 2?", return_tensors="pt").to("cuda")
+
+with torch.inference_mode():
+    result = model(**inputs)
+
+print("Forward pass successful:", result.logits.shape, flush=True)
+print("GPU SMOKE TEST PASSED", flush=True)
+PY
+

@@ -1,0 +1,47 @@
+
+#!/bin/bash -l
+#PBS -N qwen_sft
+#PBS -l select=1:ncpus=4:mem=24gb:ngpus=1:gpu_mem=16gb:scratch_local=20gb
+#PBS -l walltime=12:00:00
+#PBS -j oe
+
+set -euo pipefail
+
+BASE="/auto/brno2/brno2/ondrys/llm-reasoning"
+cd "$BASE/repo"
+
+mkdir -p "$BASE/experiments/pbs"
+exec > "$BASE/experiments/pbs/${PBS_JOBID}.log" 2>&1
+
+module add mambaforge
+eval "$(conda shell.bash hook)"
+conda activate "$BASE/envs/qwen"
+
+export HF_HOME="$BASE/hf-cache"
+mkdir -p "$HF_HOME" "$SCRATCHDIR/tmp"
+export TMPDIR="$SCRATCHDIR/tmp"
+export PIP_NO_CACHE_DIR=1
+export TOKENIZERS_PARALLELISM=false
+
+: "${PBS_ARRAY_INDEX:?Missing array index}"
+
+CONFIG=$(python - "$PBS_ARRAY_INDEX" <<'PY'
+import json
+import sys
+
+with open("configs/sft_batch_sweep.json") as f:
+    configs = json.load(f)["configs"]
+
+print(configs[int(sys.argv[1])])
+PY
+)
+
+echo "Job: $PBS_JOBID"
+echo "GPU experiment: $CONFIG"
+echo "Started: $(date)"
+
+python -u -m reasoning_opt.training.sft \
+    --config "$CONFIG"
+
+echo "FINISHED SUCCESSFULLY: $(date)"
+

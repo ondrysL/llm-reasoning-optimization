@@ -1,0 +1,39 @@
+#!/bin/bash -l
+#PBS -N qwen_eval_v2
+#PBS -l select=1:ncpus=4:mem=24gb:ngpus=1:gpu_mem=16gb:scratch_local=20gb
+#PBS -l walltime=12:00:00
+#PBS -j oe
+
+set -euo pipefail
+
+BASE="/auto/brno2/brno2/ondrys/llm-reasoning"
+cd "$BASE/repo"
+
+mkdir -p "$BASE/evaluations/pbs"
+exec > "$BASE/evaluations/pbs/${PBS_JOBID}.log" 2>&1
+
+module add mambaforge
+eval "$(conda shell.bash hook)"
+conda activate "$BASE/envs/qwen"
+
+export HF_HOME="$BASE/hf-cache"
+mkdir -p "$HF_HOME" "$SCRATCHDIR/tmp"
+export TMPDIR="$SCRATCHDIR/tmp"
+export TOKENIZERS_PARALLELISM=false
+export OMP_NUM_THREADS=4
+export MKL_NUM_THREADS=4
+
+: "${PBS_ARRAY_INDEX:?Submit with qsub -J 0-8}"
+EVAL_LIMIT="${EVAL_LIMIT:-10}"
+
+echo "Job: $PBS_JOBID / array index: $PBS_ARRAY_INDEX"
+echo "Host: $(hostname)"
+echo "Start: $(date)"
+nvidia-smi
+
+python -u scripts/evaluate_dev_v2.py \
+    --base "$BASE" \
+    --index "$PBS_ARRAY_INDEX" \
+    --limit "$EVAL_LIMIT"
+
+echo "FINISHED SUCCESSFULLY: $(date)"
